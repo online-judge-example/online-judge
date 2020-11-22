@@ -10,6 +10,23 @@ use Illuminate\Support\Facades\DB;
 class Problem extends Model
 {
     use HasFactory;
+    protected $table = 'problems';
+
+    protected $fillable = [
+        'setter_id',
+        'title' ,
+        'description',
+        'input_format',
+        'output_format',
+        'time_limit',
+        'memory_limit',
+        'sample_input',
+        'sample_output',
+        'execution_type',
+        'update_at',
+        'create_at',
+    ];
+
 
     /**
      * @param $problem_id (integer)
