@@ -23,8 +23,21 @@ class Submission extends Model
     }
 
 
-    public static function submit_code(){
-
+    public static function submit_code($code){
+        try{
+            DB::table('submission')->insert([
+                'contest_id'        =>      $code['contest_id'],
+                'user_id'           =>      $code['user_id'],
+                'problem_id'        =>      $code['problem_id'],
+                'code'              =>      $code['code'],
+                'cpu'               =>      null,
+                'memory'            =>      null,
+                'verdict'           =>      null
+            ]);
+        }catch (QueryException $ex){
+            dd($ex->getMessage());
+            //die("An Error Occur. Please Try Later.");
+        }
     }
 
     public static function update_submission_status($submission_id, $values){
