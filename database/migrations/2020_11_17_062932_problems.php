@@ -26,6 +26,7 @@ class Problems extends Migration
            $table->string('sample_input',100);
            $table->string('sample_output',100);
            $table->boolean('execution_type');
+           $table->timestamps();
         });
     }
 
