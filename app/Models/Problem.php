@@ -40,7 +40,7 @@ class Problem extends Model
                     'problems.time_limit','problems.memory_limit','problems.sample_input', 'problems.sample_output',
                     'problems.execution_type', 'users.name as setter_name','users.email')
                 ->leftJoin('users', 'users.id', '=','problems.setter_id')
-                ->where('problems.id',$problem_id)->get();
+                ->where('problems.id',$problem_id)->first();
 
         } catch (QueryException $ex){
             //dd($ex->getMessage());
@@ -54,8 +54,8 @@ class Problem extends Model
      * @param $limit
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public static function get_problem_list_with_category_id($category_id, $user_id, $limit){
-        // get the array of problem id under the category id
+    public static function get_problem_list_with_category_id($category_id, $user_id){
+        // get the array of problems id under the category id
         // return problem id and title with how many user tried and solve
         // also return  tried and solve for this user
 
@@ -68,7 +68,7 @@ class Problem extends Model
                     DB::raw('(SELECT COUNT(submission.problem_id)  FROM submission WHERE submission.problem_id = problems.id) as total_sub'),
                     DB::raw('(SELECT COUNT(submission.problem_id)  FROM submission WHERE submission.problem_id = problems.id AND verdict = 1) as total_solve'),
                     DB::raw("(SELECT MIN(submission.verdict)  FROM submission WHERE submission.user_id = '$user_id' AND submission.problem_id = problems.id LIMIT 1)as verdict")
-                )->whereIn('problems.id', $problem_list)->paginate($limit);
+                )->whereIn('problems.id', $problem_list)->paginate(config('app.problem_limit'));
         }catch (QueryException $ex){
             //dd($ex->getMessage());
             die("An Error Occur. Please Try Later.");

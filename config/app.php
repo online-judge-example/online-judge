@@ -13,8 +13,9 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
-
+    'name' => env('APP_NAME', 'Online-judge'),
+    'problem_limit' => 15,
+    'submission_limit' => 15,
     /*
     |--------------------------------------------------------------------------
     | Application Environment

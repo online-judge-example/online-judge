@@ -10,9 +10,16 @@ use Illuminate\Support\Facades\DB;
 class Category extends Model
 {
     use HasFactory;
+    protected $table = 'category';
+
     public static function get_problems_id($category_id){
-        $id = DB::table('problem_category')->select('problem_id')->where('category_id','=',$category_id)->get();
-        return array(1,2,3);
+        $id = DB::table('problem_category_linker')
+            ->select('problem_id')
+            ->where('category_id','=',$category_id)
+            ->get();
+        $id_list = array();
+        foreach ($id as $item) {array_push($id_list, $item->problem_id);}
+        return $id_list;
     }
 
     /**
@@ -22,11 +29,9 @@ class Category extends Model
     public static function get_available_category_list(){
 
         try{
-            return DB::table('category')
-                ->select('id','name','position')
-                ->where('visibility',1)
-                ->orderBy('position')
-                ->get();
+            $category = Category::where('visibility',1)->orderBy('position')->get();
+            return $category;
+
         }catch (QueryException $ex){
             die("An Error Occur. Please Try Later");
         }
