@@ -95,9 +95,13 @@
                                 </tr>
                                 @foreach($my_submission as $item)
                                 <tr>
-                                    <td class="pl-0 pr-0">{{$item->sub_id}}</td>
-                                    <td class=""></td>
-                                    <td class="pl-0 pr-0">
+                                    <td class="pl-0 pr-0 align-middle"><a href="" target="_blank">{{$item->sub_id}}</a></td>
+                                    <td class="align-middle">
+                                        {{\Carbon\Carbon::parse($item->created_at)->format('d M Y')}}
+                                        <br>
+                                        {{\Carbon\Carbon::parse($item->created_at)->format('h:m:s')}}
+                                    </td>
+                                    <td class="pl-0 pr-0 align-middle">
                                         @if($item->verdict == 1){{'wrong answer'}}
                                             @elseif($item->verdict == 2){{'Time Limit'}}
                                             @elseif($item->verdict == 3){{'Accept'}}

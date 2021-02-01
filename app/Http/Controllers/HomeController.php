@@ -59,9 +59,9 @@ class HomeController extends Controller
     }
 
 
-    public function practice_problem($category_name = null, $id = null){
-        $data['problem'] = Problem::get_full_problem_details($id);
-        $data['my_submission'] = Submission::get_submission_list_of_a_problem(1, $id);
+    public function practice_problem($category_name = null, $problem_id = null){
+        $data['problem'] = Problem::get_full_problem_details($problem_id);
+        $data['my_submission'] = Submission::get_submission_list_of_a_problem(Auth::user()->id, $problem_id);
         //return $data['my_submission'];
         return view('problem',$data);
     }

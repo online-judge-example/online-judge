@@ -25,7 +25,8 @@ class Submission extends Model
     public static function get_submission_list_of_a_problem($user_id, $problem_id){
         try{
             return DB::table('submission')
-                ->select('submission.sub_id', 'submission.verdict', 'submission.updated_at')
+                ->select('submission.sub_id', 'submission.verdict', 'submission.created_at')
+                ->orderBy('submission.sub_id', 'desc')
                 ->where('submission.user_id', $user_id)
                 ->where('submission.problem_id', $problem_id)
                 ->paginate(10);
