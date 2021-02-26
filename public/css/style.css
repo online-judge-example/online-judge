@@ -1,0 +1,81 @@
+body{
+    min-height: 100vh;
+}
+.text-orange{
+	color: #fda400!important;
+    text-decoration: none;
+}
+.text-orange-hover{
+    color: #fda400!important;
+    text-decoration: none!important;
+}
+.text-orange-hover:hover{
+    color: #ffffff!important;
+}
+.bg-orange{
+	background-color: #fda400;
+}
+.c-pointer{
+    cursor: pointer;
+}
+.link{
+    color: #3490dc;
+    text-decoration: none;
+}
+.active-menu{
+    background: #464646;
+    border-radius: 3px;
+}
+.bg-custom-dark{
+    background-color: #373737;
+}
+.small-round{
+    border-radius: 6px;
+}
+.dis-none{
+    display: none;
+}
+
+.flex-container{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: start;
+	align-items: center;
+	padding-top: 5px;
+	padding-bottom: 7px;
+}
+.logo{
+	padding: 5px 15px;
+	text-decoration: none;
+}
+
+.item{
+	text-decoration: none;
+	border-radius: 3px;
+}
+.item:hover{
+	background: #474747;
+}
+/***  bootstrap override */
+.navbar-toggler:focus {
+	text-decoration: none;
+	outline: 0;
+	box-shadow: 0 0 0 0;
+}
+.navbar-light .navbar-toggler {
+	color: rgba(0,0,0,.55);
+	border-color: rgba(0,0,0,0);
+}
+.navbar-nav .nav-link {
+	padding-right: .5rem!important;
+	padding-left: .5rem!important;
+}
+
+
+
+@media (max-width: 600px) {
+	.flex-container {
+		flex-direction: column;
+	}
+}

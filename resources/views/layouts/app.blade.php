@@ -21,16 +21,18 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css')}}" rel="stylesheet">
 
+    @yield('style')
+
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100" onload="startTime()">
 <div id="app">
     <div class="row p-0 pb-2 bg-orange m-0">
         <div class="col bg-custom-dark">
 
             <nav class="navbar navbar-expand-md navbar-light shadow-sm">
                 <div class="container">
-                    <a class="navbar-brand text-orange" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                    <a class="navbar-brand text-orange" href="{{ url('/home') }}">
+                        {{ config('app.name', 'Online-Judge') }}
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                         <span class="navbar-toggler-icon"></span>
@@ -40,14 +42,10 @@
                         <!-- Left Side Of Navbar -->
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <a class="nav-link item text-orange" href="#">Contest</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link item text-orange" href="#">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link item text-orange" href="{{url('practice')}}">Practice</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link item text-orange" href="{{url('submissions')}}">Submissions</a>
                             </li>
 
                         </ul>
@@ -74,6 +72,10 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ url('/profile/'.auth()->user()->username) }}">Profile</a>
+                                        @if(auth()->user()->user_type == 1)
+                                        <a class="dropdown-item" href="{{ url('setter') }}">Setter</a>
+                                        @endif
                                         <a class="dropdown-item" href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -96,6 +98,31 @@
     <main class="py-4">
         @yield('content')
     </main>
+
 </div>
+<div class="footer mt-auto">
+    <div class="container">
+        <p class="text-center m-1"><a href="">Site Map</a> | <a href="">Contact us</a> | <span id="time"></span></p>
+        <p class="m-1 text-center"><span class="">&copy; 2020 - {{ date('Y')}} SUB-Judge</span>  <span class="">Developed and Maintain By Afzal Shorif and Hasin Raiyan</span></p>
+    </div>
+</div>
+    @yield('script')
+    <script type="text/javascript">
+        function startTime() {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            document.getElementById('time').innerHTML =
+                h + ":" + m + ":" + s;
+            var t = setTimeout(startTime, 500);
+        }
+        function checkTime(i) {
+            if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+            return i;
+        }
+    </script>
 </body>
 </html>

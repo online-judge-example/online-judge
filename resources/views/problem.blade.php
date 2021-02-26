@@ -3,6 +3,37 @@
 @section('content')
     <div class="container">
         <div class="row">
+            <div class="col">
+                @if(Session::get('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{Session::get('error')}}
+                </div>
+                @endif
+                @if(Session::get('success'))
+                <div class="alert alert-danger" role="alert">
+                    {{Session::get('success')}}
+                </div>
+                @endif
+
+                @error('file')
+                <div class="alert alert-danger" role="alert">
+                    {{$message}}
+                </div>
+                @enderror
+
+                @error('language')
+                <div class="alert alert-danger" role="alert">
+                    {{$message}}
+                </div>
+                @enderror
+                <!--
+                @foreach($errors->all() as $error)
+                    {{$error}}
+                @endforeach
+                -->
+            </div>
+        </div>
+        <div class="row">
             <div class="col-sm-12 col-md-9 order-2 order-sm-2 order-md-1">
                 <div class="row">
                     <div class="col text-center">
@@ -14,30 +45,30 @@
                 </div>
                 <div class="row pt-5">
                     <div class="col">
-                        <p>{{$problem->description}}</p>
+                        {!! $problem->description !!}
                     </div>
                 </div>
                 <div class="row pt-4">
                     <div class="col">
                         <h5>Input</h5>
-                        <p>{{$problem->input_format}}</p>
+                        {!! $problem->input_format !!}
                     </div>
                 </div>
                 <div class="row pt-4">
                     <div class="col">
                         <h5>Output</h5>
-                        <p>{{$problem->output_format}}</p>
+                        {!! $problem->output_format !!}
                     </div>
                 </div>
 
                 <div class="row pt-5">
                     <div class="col-12 col-sm-6">
                         <h5>Sample Input</h5>
-                        <p>{{$problem->sample_input}}</p>
+                        {!! nl2br($problem->sample_input) !!}
                     </div>
                     <div class="col-12 col-sm-6">
                         <h5>Sample Output</h5>
-                        <p>{{$problem->sample_output}}</p>
+                        {!! nl2br($problem->sample_output) !!}
                     </div>
                 </div>
             </div>
@@ -48,18 +79,19 @@
                             <h5 class="m-0">Submit?</h5>
                         </div>
                         <div class="p-2 pb-0 text-center">
-                            <form action="" method="post" enctype="multipart/form-data">
+                            <form action="{{url('/submit')}}" method="post" enctype="multipart/form-data">
                             @csrf
                             <table class="table">
                                 <tr>
                                     <td class="border-0 pl-0">Language:</td>
                                     <td class="border-0 pl-0 pr-0">
 
-                                        <select name="language" class="w-100">
-                                            <option>C</option>
-                                            <option>C++</option>
-                                            <option>Java</option>
-                                            <option>Python</option>
+                                        <select name="language" class="w-100 form-control form-control-sm">
+                                            <option value="c">C</option>
+                                            <option value="cpp">C++</option>
+                                            <option value="class">Java</option>
+                                            <option value="py2">Python 2.0</option>
+                                            <option value="py3">Python 3.0</option>
                                         </select>
 
                                     </td>
@@ -67,15 +99,16 @@
                                 <tr>
                                     <td class="border-0 pl-0">Chose file</td>
                                     <td class="border-0 pl-0 pr-0">
-                                        <input type="file" name="submit" class="w-100">
+                                        <input type="file" name="file" class="w-100 @error('file') text-danger @enderror">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="border-0 pl-0">
-                                        <input type="submit" value="submit" class="text-center">
+                                        <input type="submit" value="submit" class="text-center border rounded p-1 pl-2 pr-2">
                                     </td>
                                 </tr>
                             </table>
+                                <input type="hidden" name="problem_id" value="{{$problem_number}}">
                             </form>
                         </div>
                     </div>
@@ -95,18 +128,13 @@
                                 </tr>
                                 @foreach($my_submission as $item)
                                 <tr>
-                                    <td class="pl-0 pr-0 align-middle"><a href="" target="_blank">{{$item->sub_id}}</a></td>
+                                    <td class="pl-0 pr-0 align-middle"><a href="{{url('submission/'.$item->sub_id)}}" target="_blank">{{$item->sub_id}}</a></td>
                                     <td class="align-middle">
                                         {{\Carbon\Carbon::parse($item->created_at)->format('d M Y')}}
                                         <br>
                                         {{\Carbon\Carbon::parse($item->created_at)->format('h:m:s')}}
                                     </td>
-                                    <td class="pl-0 pr-0 align-middle">
-                                        @if($item->verdict == 1){{'wrong answer'}}
-                                            @elseif($item->verdict == 2){{'Time Limit'}}
-                                            @elseif($item->verdict == 3){{'Accept'}}
-                                            @endif
-                                    </td>
+                                    <td class="pl-0 pr-0 align-middle">{!! config('app.verdict')[$item->verdict.'-s'] !!}</td>
                                 @endforeach
                                 </tr>
                             </table>
@@ -120,7 +148,7 @@
         <div class="row pt-5">
             <div class="col">
                 <h5>Note</h5>
-                <p><b></b></p>
+                {!! $problem->note !!}
             </div>
         </div>
         <div class="row">

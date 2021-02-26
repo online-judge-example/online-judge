@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -45,5 +46,14 @@ class User extends Authenticatable
     protected $table = 'users';
     protected $primaryKey = 'id';
     //public $incrementing = false;
+
+    public static function get_all_user(){
+        try{
+            return User::paginate(config('app.standard_limit'));
+        }catch (QueryException $ex){
+            //dd($ex->getMessage());
+            die('An error occur. Please try later');
+        }
+    }
 
 }

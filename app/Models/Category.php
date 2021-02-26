@@ -22,6 +22,20 @@ class Category extends Model
         return $id_list;
     }
 
+    public static function get_categories_of_a_problem($problem_id){
+        try{
+
+            $categories_id = DB::table('problem_category_linker')->where('problem_id', $problem_id)->get();
+
+            $id_list = array();
+            foreach ($categories_id as $item) {array_push($id_list, $item->category_id);}
+            return $id_list;
+
+        }catch (QueryException $ex){
+            die("An Error Occur. Please Try Later");
+        }
+    }
+
     /**
      * @return object (only visible categories)
      * for normal user
@@ -29,8 +43,8 @@ class Category extends Model
     public static function get_available_category_list(){
 
         try{
-            $category = Category::where('visibility',1)->orderBy('position')->get();
-            return $category;
+            $categories = Category::where('visibility',1)->orderBy('position')->get();
+            return $categories;
 
         }catch (QueryException $ex){
             die("An Error Occur. Please Try Later");
@@ -44,7 +58,6 @@ class Category extends Model
     public static function get_all_category_list(){
         try{
             return DB::table('category')
-                ->select('id','name','position')
                 ->orderBy('position')
                 ->get();
         }catch (QueryException $ex){
@@ -54,18 +67,38 @@ class Category extends Model
 
     public static function create_category($name){
         try{
-            $position = DB::table('category')->max('position');
+            if(!Category::where('name', $name)->exists()){
+                $position = DB::table('category')->max('position');
 
-            DB::table('category')
-                ->insert(
-                    ['name' => $name, 'position' => $position+1, 'visibility' => 1]
-                );
+                return DB::table('category')
+                    ->insert(
+                        ['name' => $name, 'position' => $position+1, 'visibility' => 0]
+                    );
+            }
+            return false;
 
         }catch (QueryException $ex){
-            die("An Error Occur. Please Try Later");
+            //die("An Error Occur. Please Try Later");
             //dd($ex->getMessage());
         }
 
+    }
+
+    public static function update_category($category){
+        $find = Category::where('id', $category['id'])->first();
+        if($find === null) return;
+        // update category name
+
+        if(Category::where('id', $category['id'])->update(['name'=> $category['name']])){
+            if($find->position != $category['position']){
+                // update position
+                Category::update_position($category['id'], $category['position']);
+                return true;
+            }
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -109,7 +142,7 @@ class Category extends Model
     }
 
     public static function delete_category($category_id){
-            // delete rows from category_problem_cross table
+            // delete rows from category_problem_linker table
             // delete from category table
         try{
             //DB::table('table_name')->where('id',$category_id)->delete();
@@ -119,6 +152,35 @@ class Category extends Model
         }
     }
 
+    public static function delete_problem_category($problem_id){
 
+        try{
+            DB::table('problem_category_linker')->where('problem_id', $problem_id)->delete();
+        }catch (QueryException $ex){
+            die("An Error Occur. Please Try Later");
+        }
+    }
+
+    /**
+     * @param $category array
+     * @param $problem_id
+     */
+    public static function add_problem_category($category, $problem_id){
+        try{
+            $insert_array = array();
+
+            foreach ($category as $category_id){
+                $temp = array();
+                $temp['category_id'] = $category_id;
+                $temp['problem_id'] = $problem_id;
+
+                $insert_array[] = $temp;
+            }
+            DB::table('problem_category_linker')->insert($insert_array);
+        }catch (QueryException $ex){
+            //die("An Error Occur. Please Try Later");
+            dd($ex->getMessage());
+        }
+    }
 
 }

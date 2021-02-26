@@ -19,15 +19,17 @@
                         @foreach($problems as $problem)
                         <tr>
                             <td>{{$problem->id}}</td>
-                            <td>@if($problem->verdict == null)
-                                    <i class="fa fa-check"></i>
-                                @elseif($problem->verdict < 3)
-                                <i class="fa fa-times text-danger"></i>
-                                @else <i class="fa fa-check text-success"></i>
+                            <td>
+                                @if($problem->verdict === null) <i class="fa fa-check" style="color: #80808078"></i>
+                                @else {!! config('app.verdict_flag')[$problem->verdict] !!}
                                 @endif
                             </td>
-                            <td><a href="{{url('practice/'.$category_id.'/'.$problem->id)}}" class="text-decoration-none">{{$problem->title}}</a></td>
-                            <td>{{$problem->total_solve}} / {{$problem->total_sub}}</td>
+                            <td><a href="{{url('problem/'.$problem->id)}}" class="text-decoration-none">{{$problem->title}}</a></td>
+
+                            @if(auth()->user()->user_type > 0)
+                                <td><a target="_blank" href="{{ url('setter/submissions/'.$problem->id) }}">{{$problem->total_solve}} / {{$problem->total_sub}} </a></td>
+                            @else <td>{{$problem->total_solve}} / {{$problem->total_sub}}</td>
+                            @endif
                         </tr>
                         @endforeach
                         </tbody>

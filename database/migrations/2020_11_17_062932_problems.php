@@ -15,17 +15,18 @@ class Problems extends Migration
     {
         //
         Schema::create('problems',function (Blueprint $table){
-           $table->id();
-           $table->foreignId('setter_id');
+           $table->bigIncrements('id')->autoIncrement(1000);
+           $table->integer('setter_id');
            $table->string('title',100);
            $table->text('description');
            $table->text('input_format');
            $table->text('output_format');
-           $table->tinyInteger('time_limit');
+           $table->text('note')->nullable();
+           $table->float('time_limit');
            $table->integer('memory_limit');
            $table->string('sample_input',100);
            $table->string('sample_output',100);
-           $table->boolean('execution_type');
+           //$table->boolean('execution_type');
            $table->timestamps();
         });
     }

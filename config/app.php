@@ -14,8 +14,49 @@ return [
     */
 
     'name' => env('APP_NAME', 'Online-judge'),
+    'standard_limit' => 15,
+    'medium_limit' => 15,
+    'short_limit' => 5,
     'problem_limit' => 15,
     'submission_limit' => 15,
+    'verdict' =>  array(
+        '0' => '<p class="m-0"><b>Not Judged Yet</b></p>',
+        '1' => '<p class="m-0 text-success"><b>Accept</b></p>',
+        '2' => '<p class="m-0 text-danger"><b>Wrong Answer</b></p>',
+        '3' => '<p class="m-0 text-danger"><b>Time Limit</b></p>',
+        '4' => '<p class="m-0 text-danger"><b>Memory Limit</b></p>',
+        '5' => '<p class="m-0 text-danger"><b>Compilation Error</b></p>',
+        '6' => '<p class="m-0 text-danger"><b>Runtime Error</b></p>',
+        '7' => '<p class="m-0"><b>Not Judged Yet</b></p>',
+
+        '0-s' => '<p class="m-0"><b>Not Judged Yet</b></p>',
+        '1-s' => '<p class="m-0 text-success"><b>AC</b></p>',
+        '2-s' => '<p class="m-0 text-danger"><b>WA</b></p>',
+        '3-s' => '<p class="m-0 text-danger"><b>TLE</b></p>',
+        '4-s' => '<p class="m-0 text-danger"><b>MLE</b></p>',
+        '5-s' => '<p class="m-0 text-danger"><b>COM</b></p>',
+        '6-s' => '<p class="m-0 text-danger"><b>RET</b></p>',
+        '7-s' => '<p class="m-0"><b>Not Judged Yet</b></p>',
+    ),
+
+    'language' => array(
+        '1' => 'C++',
+        'c' => 'C',
+        'cpp' => 'C++ 11',
+        'class' => 'Java',
+        'py2' => 'Python 2.0',
+        'py3' => 'Python 3.0',
+    ),
+
+    'verdict_flag' =>  array(
+        '0' => '<i class="fa fa-check text-success"></i>',
+        '1' => '<i class="fa fa-check text-success"></i>',
+        '2' => '<i class="fa fa-times text-danger"></i>',
+        '3' => '<i class="fa fa-times text-danger"></i>',
+        '4' => '<i class="fa fa-times text-danger"></i>',
+        '5' => '<i class="fa fa-check" style="color: #80808078"></i>',
+    ),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -68,7 +109,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Dhaka',
+    //'timezone' => 'UTC',
 
     /*
     |--------------------------------------------------------------------------
