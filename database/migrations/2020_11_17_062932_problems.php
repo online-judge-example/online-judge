@@ -13,7 +13,7 @@ class Problems extends Migration
      */
     public function up()
     {
-        //
+        // ALTER TABLE users AUTO_INCREMENT=1001;
         Schema::create('problems',function (Blueprint $table){
            $table->bigIncrements('id')->autoIncrement(1000);
            $table->integer('setter_id');
@@ -26,6 +26,7 @@ class Problems extends Migration
            $table->integer('memory_limit');
            $table->string('sample_input',100);
            $table->string('sample_output',100);
+           $table->tinyInteger('status');
            //$table->boolean('execution_type');
            $table->timestamps();
         });

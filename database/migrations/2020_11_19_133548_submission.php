@@ -23,7 +23,7 @@ class Submission extends Migration
         Schema::create('submission', function(Blueprint $table){
             $table->bigIncrements('sub_id');
             //$table->integer('contest_id');
-            $table->integer('language_id');
+            $table->varchar('language_id');
             $table->integer('user_id');
             $table->integer('problem_id');
             $table->text('code');

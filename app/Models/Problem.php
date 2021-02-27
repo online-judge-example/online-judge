@@ -22,7 +22,6 @@ class Problem extends Model
         'memory_limit',
         'sample_input',
         'sample_output',
-        'execution_type',
         'update_at',
         'create_at',
     ];
@@ -67,7 +66,7 @@ class Problem extends Model
             return DB::table('problems')
                 ->select('problems.title','problems.description','problems.input_format','problems.output_format',
                     'problems.time_limit','problems.memory_limit','problems.sample_input', 'problems.sample_output', 'problems.note',
-                    'problems.execution_type', 'users.name as setter_name','users.email')
+                    'users.name as setter_name','users.email')
                 ->leftJoin('users', 'users.id', '=','problems.setter_id')
                 ->where('problems.id',$problem_id)
                 ->where('problems.status',1)->first();
@@ -146,6 +145,7 @@ class Problem extends Model
                 )->where('problems.setter_id', $user_id)->paginate(config('app.problem_limit'));
         }catch (QueryException $ex){
             // return 0 means something wrong happen
+            dd($ex->getMessage());
             die("An Error Occur. Please Try Later.");
         }
 
@@ -169,7 +169,7 @@ class Problem extends Model
                 'memory_limit'      =>      1024,
                 'sample_input'      =>      $problem_details['sample_input'],
                 'sample_output'     =>      $problem_details['sample_output'],
-                'execution_type'    =>      1,
+                //'execution_type'    =>      1,
                 'note'              =>      $problem_details['note'],
             ]);
         }catch (QueryException $ex){
@@ -269,7 +269,7 @@ class Problem extends Model
 
             }catch (QueryException $ex){
                 // return 0 means something wrong happen
-                die("An Error Occur. Please Try Later.");
+                die("An Error Occur. Please Try Later. search");
             }
         //}
 
@@ -304,7 +304,7 @@ class Problem extends Model
             return DB::table('problems')
                 ->select('problems.id','problems.title','problems.description','problems.input_format','problems.output_format',
                     'problems.time_limit','problems.memory_limit','problems.sample_input', 'problems.sample_output',
-                    'problems.execution_type','problems.status','problems.note')
+                    'problems.status','problems.note')
                 ->where('problems.id',$problem_id)->first();
 
         } catch (QueryException $ex){

@@ -13,7 +13,7 @@
             </nav>
             <div class="col-md-10 ml-sm-auto col-lg-10 px-4 pt-3 mb-5">
                 <div class="w-100 d-flex mb-3">
-                    <h4>My Problems</h4>
+                    <h4>User List</h4>
                 </div>
 
                 <div class="table-responsive overflow-hidden">

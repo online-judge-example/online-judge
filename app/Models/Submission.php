@@ -48,11 +48,11 @@ class Submission extends Model
         //verdict 1 means accepted
         try{
             return DB::table('submission')
-                ->select('submission.problem_id')
+                ->select('submission.problem_id', 'submission.sub_id')
                 ->where('submission.user_id', $user_id)
                 ->where('submission.verdict', '=', 1)
-                ->orderBy('submission.sub_id','desc')
-                ->groupBy('submission.problem_id')->get();
+                ->groupBy('submission.problem_id')
+                ->orderBy('submission.sub_id','desc')->get();
         }catch (QueryException $ex){
             die("An Error Occur. Please Try Later.");
             //dd($ex->getMessage());
