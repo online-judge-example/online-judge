@@ -388,8 +388,9 @@ class ProblemSetter extends Controller
         ]);
         $problem_id = $request->input('problem_id');
         if(Problem::isProblemAccessible($problem_id, Auth::user()->id)){
-            $input = file_get_contents($request['input']);
-            $output = file_get_contents($request['output']);
+
+            $input = preg_replace("/\r/", "", file_get_contents($request['input']));
+            $output = preg_replace("/\r/", "", file_get_contents($request['output']));
 
             Testcase::insertTestcase($problem_id, $input, $output);
             return back();

@@ -28,7 +28,7 @@ Route::get('/test', 'App\Http\Controllers\TestModel@index');
 Auth::routes(['verify' => true]);
 
 Route::get('/', function(){
-    return 'Hello World';
+    return view('index');
 });
 
 

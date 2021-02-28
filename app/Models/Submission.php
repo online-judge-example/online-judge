@@ -123,6 +123,22 @@ class Submission extends Model
         }
     }
 
+    public static function append_user_code($sub_id, $code){
+        // compilation error occur.
+        // so update the user code with error message.
+        try{
+            DB::table('submission')
+                ->where('sub_id', $sub_id)
+                ->update([
+                    'code' => $code,
+                ]);
+        }catch (QueryException $ex){
+            die("An Error Occur. Please Try Later.");
+            //dd($ex->getMessage());
+        }
+    }
+
+
     public static function get_submissions_of_a_problem($problem_id){
         try{
             return DB::table('submission')

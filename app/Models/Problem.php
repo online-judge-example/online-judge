@@ -313,6 +313,21 @@ class Problem extends Model
         }
     }
 
+
+    public static function get_problem_limit($problem_id){
+        // return just time and memory limit
+        try{
+            return DB::table('problems')
+                ->select('problems.time_limit','problems.memory_limit')
+                ->where('problems.id',$problem_id)->first();
+        } catch (QueryException $ex){
+            //dd($ex->getMessage());
+            die("An Error Occur. Please Try Later.");
+        }
+    }
+
+
+
     /** update */
     /**
      * @param $problem_id
