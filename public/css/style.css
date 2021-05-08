@@ -29,6 +29,9 @@ body{
 .bg-custom-dark{
     background-color: #373737;
 }
+.border-custom-dark{
+    border-color: #373737!important;
+}
 .small-round{
     border-radius: 6px;
 }

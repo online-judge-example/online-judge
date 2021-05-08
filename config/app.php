@@ -38,24 +38,39 @@ return [
         '6-s' => '<p class="m-0 text-danger"><b>RET</b></p>',
         '7-s' => '<p class="m-0"><b>Not Judged Yet</b></p>',
     ),
-
-    'language' => array(
-        '1' => 'C++',
-        'c' => 'C',
-        'cpp' => 'C++ 11',
-        'class' => 'Java',
-        'py2' => 'Python 2.0',
-        'py3' => 'Python 3.0',
-    ),
-
     'verdict_flag' =>  array(
         '0' => '<i class="fa fa-check text-success"></i>',
         '1' => '<i class="fa fa-check text-success"></i>',
         '2' => '<i class="fa fa-times text-danger"></i>',
         '3' => '<i class="fa fa-times text-danger"></i>',
         '4' => '<i class="fa fa-times text-danger"></i>',
-        '5' => '<i class="fa fa-check" style="color: #80808078"></i>',
+        '5' => '<i class="fa fa-times text-danger"></i>',
+        '6' => '<i class="fa fa-times text-danger"></i>',
+        '7' => '<i class="fa fa-check" style="color: #80808078"></i>',
     ),
+
+    'language' => array(
+        '1' => 'C++',
+        'c' => 'C',
+        'cpp' => 'C++ 11',
+        'cpp14' => 'C++ 14',
+        'cpp17' => 'C++ 17',
+        'java' => 'Java',
+        'python2' => 'Python 2.7.16',
+        'python3' => 'Python 3.7.4',
+    ),
+
+    'language_index' => array(
+        'java'  => 3,
+        'c'     => 4,
+        'cpp'   => 0,
+        'cpp14' => 3,
+        'cpp17' => 0,
+        'python2'=> 2,
+        'python3' => 3,
+    ),
+
+
 
     /*
     |--------------------------------------------------------------------------

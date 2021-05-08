@@ -72,7 +72,7 @@
                         console.log(data);
                     }
                 }).then(function() {           // on completion, restart
-                    setTimeout(update, 30000);  // function refers to itself
+                    setTimeout(update, 10000);  // function refers to itself
                 });
             }
         })();

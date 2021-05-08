@@ -87,11 +87,13 @@
                                     <td class="border-0 pl-0 pr-0">
 
                                         <select name="language" class="w-100 form-control form-control-sm">
-                                            <option value="c">C</option>
-                                            <option value="cpp">C++</option>
-                                            <option value="class">Java</option>
-                                            <option value="py2">Python 2.0</option>
-                                            <option value="py3">Python 3.0</option>
+                                            <option value="c">C GCC 9.1.0</option>
+                                            <option value="cpp">C++ GCC 5.3.0</option>
+                                            <option value="cpp14">g++ 14 GCC 9.1.0 </option>
+                                            <option value="cpp17">g++ 17 GCC 9.1.0</option>
+                                            <option value="java">Java JDK 11.0.4</option>
+                                            <option value="python2">Python 2.7.16</option>
+                                            <option value="python3">Python 3.7.4</option>
                                         </select>
 
                                     </td>

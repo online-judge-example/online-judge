@@ -89,7 +89,6 @@ class Submission extends Model
         }
     }
 
-
     public static function submit_code($code){
         try{
             return DB::table('submission')->insertGetId([
@@ -137,7 +136,6 @@ class Submission extends Model
             //dd($ex->getMessage());
         }
     }
-
 
     public static function get_submissions_of_a_problem($problem_id){
         try{

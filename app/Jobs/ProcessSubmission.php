@@ -72,8 +72,8 @@ class ProcessSubmission implements ShouldQueue
                 'clientSecret' => '6ba69d7123f3c3df6fef4d4798a6a79d2ecf851d00ba077e1583aeff3116139',
                 'script' => $sub_details->code,
                 'stdin' => $tc->input,
-                'language' => 'cpp',
-                'versionIndex' => '0',
+                'language' => $sub_details->language_id,
+                'versionIndex' => config('app.language_index')[$sub_details->language_id],
             ]);
 
             if ($response->successful()) {

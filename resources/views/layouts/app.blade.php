@@ -72,7 +72,9 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                        @if(in_array(auth()->user()->user_type, [0,1]))
                                         <a class="dropdown-item" href="{{ url('/profile/'.auth()->user()->username) }}">Profile</a>
+                                        @endif
                                         @if(auth()->user()->user_type == 1)
                                         <a class="dropdown-item" href="{{ url('setter') }}">Setter</a>
                                         @endif

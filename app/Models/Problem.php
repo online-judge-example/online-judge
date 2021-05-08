@@ -18,14 +18,17 @@ class Problem extends Model
         'description',
         'input_format',
         'output_format',
-        'time_limit',
-        'memory_limit',
         'sample_input',
         'sample_output',
         'update_at',
         'create_at',
     ];
 
+    protected $casts = [
+        'update_at' => 'datetime',
+        'create_at' => 'datetime',
+
+    ];
     /**
      * Problem Model
      * setter is also a normal user
@@ -33,8 +36,6 @@ class Problem extends Model
      * (as a setter) can get preview  and update information only for his/her problem
      * normal user read and submit all the problem where status = 1
      */
-
-
 
 
     /**

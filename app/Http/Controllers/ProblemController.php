@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Setter;
+namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProblem;
 use App\Models\Category;
+use App\Models\Submission;
 use App\Models\Testcase;
 use App\Models\Problem;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DB;
+use Illuminate\Support\Facades\Http;
 
 class ProblemController extends Controller
 
@@ -19,31 +22,19 @@ class ProblemController extends Controller
      * problem setter : user_type = 1
      */
 
-
-    public function __construct()
-    {
-        // check the authentication
-        $this->middleware('auth');
-        // check the user_type
-        $this->middleware('setter');
-    }
-
-
     /**
      * function index, no parameter
      * return view, dashboard for setter
      */
     public function index(){
-
         return redirect(url('setter/problems'));
         //return view('setter.dashboard');
     }
 
-
     /** methods for return view */
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\View
      * problem list of the user(setter). only his/her problem list
      * use DataTable plugin to view the problem
      * first show the default(pass with view) problem list
@@ -55,11 +46,10 @@ class ProblemController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\View\View
      * only for the view for create problem
      */
-    public function add_problem(){
-
+    public function create_problem(){
         $data['action'] = url('/setter/problem/save');
         return view('setter.add_problem', $data);
     }
@@ -69,7 +59,7 @@ class ProblemController extends Controller
      * return view
      * set or update problem limit
      * time limit, memory limit, status, inputs, outputs
-     * @return View
+     * @return \Illuminate\Contracts\View\View
      */
     public function configure_problem($problem_id = 0){
         // check the problem owner
@@ -83,10 +73,9 @@ class ProblemController extends Controller
         return view('setter.limit',$data);
     }
 
-
     /**
      * @param $problem_id
-     * @return View
+     * @return \Illuminate\Contracts\View\View
      * use for update problem description
      */
 
@@ -108,16 +97,8 @@ class ProblemController extends Controller
      * @param Request $request (Problem details)
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function save_problem(Request $request){
-        // form validation
-        $request->validate([
-            'title' => 'required|string|min:3|max:50',
-            'description' => 'required|string|min:20|max:1000',
-            'input_format' => 'required|string|min:20|max:1000',
-            'output_format' => 'required|string|min:20|max:1000',
-            'sample_input' => 'required|string|min:1|max:100',
-            'sample_output' => 'required|string|min:1|max:100',
-        ]);
+    public function save_problem(CreateProblem $request){
+        $validated = $request->validated();
 
         // prepare the array for model to save in database
         $details = array(
@@ -134,7 +115,6 @@ class ProblemController extends Controller
         if(Problem::insert_problem($details)){
             return back()->with('success', 'problem save successfully');
         }
-
         return back()->with('error', 'An error occur. Please try later');
     }
 
@@ -152,7 +132,7 @@ class ProblemController extends Controller
             //3 => 'edit',
         );
 
-        $totalData = DB::table('problems')->where('setter_id', Auth::user()->id)->count();
+        $totalData = Problem::where('setter_id', Auth::user()->id)->count();
         $totalFiltered = $totalData;
         $limit = $request->input('length');
         $start = $request->input('start');
@@ -228,17 +208,10 @@ class ProblemController extends Controller
     public function update_description(Request $request){
 
         $request->validate([
-            'title' => 'required|string|min:3|max:50',
-            'description' => 'required|string|min:20|max:1000',
-            'input_format' => 'required|string|min:20|max:1000',
-            'output_format' => 'required|string|min:20|max:1000',
-            'sample_input' => 'required|string|min:1|max:50',
-            'sample_output' => 'required|string|min:1|max:50',
             'problem_id' => 'required|numeric'
         ]);
 
         if(!Problem::isProblemAccessible($request->input('problem_id'), Auth::user()->id)) abort(403);
-
 
         // prepare the array for model to save in database
         $details = array(
@@ -294,4 +267,128 @@ class ProblemController extends Controller
         }
         return back()->with('error', 'Problem is not accessible');
     }
+
+    public function debug($id = null){
+
+
+        $data['problem_id'] = -1;
+        if($id != null){
+            $row = Problem::select('id','title')
+                ->where('setter_id', Auth::user()->id)
+                ->where('id', $id)->first();
+            $data['problem_title']  = $row->title;
+            $data['problem_id'] = $row->id;
+        }
+
+        return view('setter.debug', $data);
+    }
+
+    public function getProblemSuggestion(Request $request){
+        $data['status'] = "success";
+
+        $problems = Problem::select('id', 'title')
+            ->where('setter_id', Auth::user()->id)
+            ->where('title', 'like', '%'.$request->get('text').'%')->paginate(10);
+
+        $list = array();
+
+        foreach ($problems as $problem){
+
+            $list[] = '<p class="p-2 m-0 suggest_list"><a style="text-decoration: none" href="'.route('setter.debug', ['id'=>$problem->id]).'">'.$problem->title.'</a></p>';
+        }
+
+        $data['list'] = $list;
+        return json_encode($data);
+
+    }
+
+
+    public function debug_submit(Request $request){
+        /*
+        $array1['verdict'] = 10;
+        $array1['time_take'] = 10;
+        $array1['memory_take'] = 10;
+        $v[] = $array1;
+        $array1['verdict'] = 15;
+        $array1['time_take'] = 16;
+        $array1['memory_take'] = 17;
+        $v[] = $array1;
+
+        return json_encode($v);
+        */
+
+        $problem_id = $request->get('problem');
+        $code = $request->get('code');
+        $language = $request->get('language');
+
+        // gathering information
+        $testcase = Testcase::getAllTestcase($problem_id);
+        // get the problem limits
+        $problem = Problem::get_problem_limit($problem_id);
+        $data = array();
+
+        foreach ($testcase as $tc){
+            $response = Http::post('https://api.jdoodle.com/v1/execute', [
+                'clientId' => '6f9e183fcfe6b78aa3981115e491432b',
+                'clientSecret' => '6ba69d7123f3c3df6fef4d4798a6a79d2ecf851d00ba077e1583aeff3116139',
+                'script' => $code,
+                'stdin' => $tc->input,
+                'language' => $language,
+                'versionIndex' => config('app.language_index')[$language],
+            ]);
+
+            if ($response->successful()) {
+                // api call success
+                $details = array();
+
+                $result = json_decode($response->body());
+
+                if (property_exists($result, "error")) {
+                    $details['verdict'] = config('app.verdict')[6];
+
+                } else {
+
+                    $server_tl = (float)$result->cpuTime;
+                    $server_ml = (int)$result->memory;
+                    $server_output = $output = preg_replace("/\r/", "", $result->output);
+                    // get problem limit
+                    $tl = (float)$problem->time_limit;
+                    $ml = (int)$problem->memory_limit;
+                    $epsilon = 0.0001;
+                    $details['time_require'] = $tl;
+                    $details['memory_require'] = $ml;
+                    $details['time_take'] = $server_tl;
+                    $details['memory_take'] = $server_ml;
+
+                    if ($server_ml == 0) {
+                        // compilation error
+
+                        // update the verdict
+                        $details['verdict'] = config('app.verdict')[5];
+
+                    } else if (($tl + $epsilon) < $server_tl) {
+                        // time limit
+                        $details['verdict'] = config('app.verdict')[3];
+                    } else if ($server_ml > $ml) {
+                        // memory limit
+                        $details['verdict'] = config('app.verdict')[4];
+                    } else if (strcmp($server_output, $tc->output) != 0) {
+                        // wrong answer
+                        //var_dump(strcmp($server_output, trim($testcase[0]->output)));
+                        $details['verdict'] = config('app.verdict')[2];
+                    } else {
+                        $details['verdict'] = config('app.verdict')[1];
+                    }
+
+                }  // end else
+
+                $data[] = $details;
+
+            } // end response success
+        }  // end foreach
+
+        return json_encode($data);
+
+    }
+
 }

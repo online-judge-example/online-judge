@@ -17,7 +17,7 @@ class ProblemSetter extends Controller
 {
     /**
      * Problem Setter is a Controller which control all the action of a problem setter
-     * only user as a problem setter (user_type == 0) can access all the function of this controller
+     * only user as a problem setter (user_type == 1) can access all the function of this controller
      * practice user :  user_type = 0
      * problem setter : user_type == 1
      */
